@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_CONFIG=production
+      - DATABASE_URL=postgresql://paws_user:paws_pass@db:5432/paws_db
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=paws_db
+      - POSTGRES_USER=paws_user
+      - POSTGRES_PASSWORD=paws_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6-alpine
+
+volumes:
+  postgres_data:
